@@ -1,23 +1,20 @@
 == unifiedpush
 :idprefix: id_ 
-(choose one, do not modify, then add a second sentence with a brief description, starting with - "The unifiedpush addon enables blah blah...)
-This addon provides *standalone* functionality, and *exports services* for use in other addons. 
+
 This addon provides *standalone* functionality.
-This addon *exports services* for use in other addons. 
-This addon *provides classes* for use in other addons. 
-This addon is a 'Furnace container' that provides *lifecycle* and *service registry* support for dependent addons.
+The UnifiedPush Addon provides functionality to connect your application with an UnifiedPush Server instance.
         
-=== Dependencies: None (or)
+=== Dependencies: 
 === Depends on
 [options="header"]
 |===
 |Addon |Exported |Optional
-|DEP1
-|yes
+|templates
 |no
-|DEP2
-|yes
-|yes
+|no
+|resource
+|no
+|no
 |===
 
 == Setup

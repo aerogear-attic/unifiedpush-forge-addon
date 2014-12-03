@@ -1,16 +1,22 @@
 package org.jboss.aerogear.commands;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import org.jboss.forge.addon.dependencies.Dependency;
 import org.jboss.forge.addon.dependencies.builder.DependencyBuilder;
 import org.jboss.forge.addon.projects.ProjectFactory;
 import org.jboss.forge.addon.projects.dependencies.DependencyInstaller;
+import org.jboss.forge.addon.projects.facets.ResourcesFacet;
 import org.jboss.forge.addon.projects.ui.AbstractProjectCommand;
 import org.jboss.forge.addon.resource.FileResource;
 import org.jboss.forge.addon.resource.Resource;
 import org.jboss.forge.addon.resource.ResourceFactory;
 import org.jboss.forge.addon.templates.TemplateFactory;
 import org.jboss.forge.addon.templates.freemarker.FreemarkerTemplate;
-import org.jboss.forge.addon.ui.command.AbstractUICommand;
 import org.jboss.forge.addon.ui.context.UIBuilder;
 import org.jboss.forge.addon.ui.context.UIContext;
 import org.jboss.forge.addon.ui.context.UIExecutionContext;
@@ -18,22 +24,10 @@ import org.jboss.forge.addon.ui.hints.InputType;
 import org.jboss.forge.addon.ui.input.UIInput;
 import org.jboss.forge.addon.ui.metadata.UICommandMetadata;
 import org.jboss.forge.addon.ui.metadata.WithAttributes;
-import org.jboss.forge.addon.ui.util.Metadata;
-import org.jboss.forge.addon.ui.util.Categories;
 import org.jboss.forge.addon.ui.result.Result;
 import org.jboss.forge.addon.ui.result.Results;
-
-import freemarker.template.Template;
-
-import java.io.File;
-import java.io.InputStreamReader;
-import java.lang.Override;
-import java.lang.Exception;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.inject.Inject;
+import org.jboss.forge.addon.ui.util.Categories;
+import org.jboss.forge.addon.ui.util.Metadata;
 
 public class UnifiedPushSetupCommand extends AbstractProjectCommand {
 
@@ -76,24 +70,37 @@ public class UnifiedPushSetupCommand extends AbstractProjectCommand {
 
 	@Override
 	public Result execute(UIExecutionContext context) throws Exception {
-		Dependency dependency =
-				DependencyBuilder.create("org.jboss.aerogear")
-				.setArtifactId("unifiedpush-java-client")
-				.setVersion("1.1.0-SNAPSHOT");
-		
-		dependencyInstaller.install(getSelectedProject(context), dependency);
+		injectDependency(context);
 		
 		
-		URL templateUrl = getClass().getResource("org/jboss/aerogear/pushConfiguration.ftl");
-		Resource<?> resource = resourceFactory.create(templateUrl);
+		String output = createConfiguration(context);
+		return Results
+				.success("Command 'unifiedpush: Setup' successfully executed! " + output);
+	}
+
+	private String createConfiguration(UIExecutionContext context)
+			throws IOException {
+		Resource<?> resource = resourceFactory.create(getClass().getResource("/org/jboss/aerogear/pushConfiguration.ftl"));
 		org.jboss.forge.addon.templates.Template template = templateFactory.create(resource, FreemarkerTemplate.class);
 		Map<String,Object> params = new HashMap<String,Object>(); //Could also be a POJO also.
 		params.put("serverUrl", serverURL.getValue());
 		params.put("pushApplicationId", pushApplicationId.getValue());
 		params.put("masterSecret", masterSecret.getValue());
-		String output = template.process(params); // should return "Hello JBoss Forge".
-		return Results
-				.success("Command 'unifiedpush: Setup' successfully executed! " + output);
+		String output = template.process(params); // should return "Hello JBoss Forge"
+		ResourcesFacet resources = getSelectedProject(context).getFacet(ResourcesFacet.class);
+		FileResource<?> destinationResource = resources.getResource("/META-INF/pushConfiguration.json");
+		destinationResource.createNewFile();
+		destinationResource.setContents(output);
+		return output;
+	}
+
+	private void injectDependency(UIExecutionContext context) {
+		Dependency dependency =
+				DependencyBuilder.create("org.jboss.aerogear")
+				.setArtifactId("unifiedpush-java-client")
+				.setVersion("1.1.0-alpha.1");
+		
+		dependencyInstaller.install(getSelectedProject(context), dependency);
 	}
 
 	@Override
