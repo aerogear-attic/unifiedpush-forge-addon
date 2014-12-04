@@ -1,4 +1,4 @@
-== unifiedpush
+== Forge Addon for UnifiedPush Server
 :idprefix: id_ 
 
 This addon provides *standalone* functionality.
