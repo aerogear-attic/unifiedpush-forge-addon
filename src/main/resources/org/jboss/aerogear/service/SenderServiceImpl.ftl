@@ -1,4 +1,4 @@
-package ${package}.service.impl;
+package ${package}.push.impl;
 
 import ${package}.service.SenderService;
 import org.jboss.aerogear.unifiedpush.DefaultPushSender;

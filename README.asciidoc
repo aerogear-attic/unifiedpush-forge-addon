@@ -32,28 +32,33 @@ To use this addon, you must add it as a dependency in the *pom.xml* of your `for
 </dependency>
 ----
 == Features
-ABCFactory for simple ABC blah:: 
-Allows for blah blah
-+
+This addon helps to integrate the UnifiedPush Java Sender into your application.
+Start by calling the setup command : 
+----
+unifiedpush-setup --serverURL http://myserver.com --pushApplicationId 123456789 --masterSecret mypassword
+----
+
+You can also omit the the parameters, you will then be prompted for each property.
+
+After that, you can generate a service that will wrap the Java Sender 
+
+----
+unifiedpush-generate-service 
+----
+
+From there you can use this service wherever you want:
+
 [source,java]
 ----
-@Inject private ABCFactory factory;
-ABC abc = factory.createABC();
-----
-+
-[TIP] 
-====
-If your addon uses a container that does not support "@Inject" annotations, services such as the `ABCFactory` may also be 
-accessed via the `AddonRegistry`:
-----
-Imported<ABCFactory> imported = addonRegistry.getServices(ABCFactory.class);
-ABCFactory factory = imported.get();
-----
-==== 
-Creating a new XYZ instance:: 
-Causes XYZ to occur
-+
-[source,java]
-----
-XYZ xyz = factory.createXYZ();
+@Inject
+private SenderService senderService;
+
+@POST
+@Consumes("application/json")
+public Response create(Message entity) {
+  em.persist(entity);
+  UnifiedMessage message = UnifiedMessage.withMessage().alert(entity.getContent()).build();
+  senderService.send(message);
+  return Response.Ok().build();
+}
 ----

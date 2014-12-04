@@ -1,4 +1,4 @@
-package ${package}.service;
+package ${package}.push;
 
 import org.jboss.aerogear.unifiedpush.message.UnifiedMessage;
 

@@ -45,15 +45,15 @@ public class UnifiedPushSetupCommand extends AbstractProjectCommand {
 	private TemplateFactory templateFactory;
 
 	@Inject
-	@WithAttributes(label = "Server URL")
+	@WithAttributes(label = "Server URL", required = true)
 	private UIInput<String> serverURL;
 
 	@Inject
-	@WithAttributes(label = "PushApplication id")
+	@WithAttributes(label = "PushApplication id", required = true)
 	private UIInput<String> pushApplicationId;
 
 	@Inject
-	@WithAttributes(label = "Master Secret", type = InputType.SECRET)
+	@WithAttributes(label = "Master Secret", type = InputType.SECRET, required = true)
 	private UIInput<String> masterSecret;
 
 	@Override
@@ -75,7 +75,7 @@ public class UnifiedPushSetupCommand extends AbstractProjectCommand {
 		
 		String output = createConfiguration(context);
 		return Results
-				.success("Command 'unifiedpush: Setup' successfully executed! " + output);
+				.success("Command 'unifiedpush: Setup' successfully executed! ");
 	}
 
 	private String createConfiguration(UIExecutionContext context)
