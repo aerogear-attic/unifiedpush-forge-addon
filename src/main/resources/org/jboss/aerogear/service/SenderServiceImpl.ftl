@@ -1,6 +1,6 @@
 package ${package}.push.impl;
 
-import ${package}.service.SenderService;
+import ${package}.push.SenderService;
 import org.jboss.aerogear.unifiedpush.DefaultPushSender;
 import org.jboss.aerogear.unifiedpush.PushSender;
 import org.jboss.aerogear.unifiedpush.message.UnifiedMessage;
@@ -14,6 +14,6 @@ public class SenderServiceImpl implements SenderService {
 
 	}
 	public SenderServiceImpl() {
-		pushSender = DefaultPushSender.withConfig("WEB-INF/pushConfiguration.json").build();
+		pushSender = DefaultPushSender.withConfig("META-INF/pushConfiguration.json").build();
 	}	
 }

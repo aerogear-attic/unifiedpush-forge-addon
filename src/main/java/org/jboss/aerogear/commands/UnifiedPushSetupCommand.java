@@ -98,9 +98,16 @@ public class UnifiedPushSetupCommand extends AbstractProjectCommand {
 		Dependency dependency =
 				DependencyBuilder.create("org.jboss.aerogear")
 				.setArtifactId("unifiedpush-java-client")
-				.setVersion("1.1.0-alpha.1");
+				.setVersion("1.1.0-alpha.2");
+		Dependency dependencyXc =
+				DependencyBuilder.create("org.codehaus.jackson")
+				.setArtifactId("jackson-xc")
+				.setVersion("1.9.13");
 		
 		dependencyInstaller.install(getSelectedProject(context), dependency);
+		dependencyInstaller.install(getSelectedProject(context), dependencyXc);
+
+		
 	}
 
 	@Override
