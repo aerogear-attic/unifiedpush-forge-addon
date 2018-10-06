@@ -1,3 +1,6 @@
+## Deprecation Notice
+This repository has been deprecated and is not being maintained. If you have any questions, please get in touch with the collaborators.
+
 == Forge Addon for UnifiedPush Server
 :idprefix: id_ 
 
